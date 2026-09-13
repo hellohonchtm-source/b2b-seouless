@@ -2,5 +2,21 @@
   "previewPort": 3000,
   "healthPath": "/",
   "startCommand": "docker compose -f docker-compose.base44.yml up -d",
-  "secrets": []
+  "secrets": [
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_URL",
+      "description": "Supabase project URL (from Supabase Dashboard > Project Settings > API > Project URL)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "VITE_SUPABASE_ANON_KEY",
+      "description": "Supabase anon/public key (from Supabase Dashboard > Project Settings > API > Project API keys > anon public). Never use the service_role key in the client.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "GEMINI_API_KEY",
+      "description": "Google Gemini AI API key (from Google AI Studio)",
+      "requiredAtBoot": false
+    }
+  ]
 }

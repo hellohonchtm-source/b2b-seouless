@@ -10,6 +10,8 @@ services:
       - "3000:3000"
     environment:
       - __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
+    env_file:
+      - /run/base44/app.env
     restart: unless-stopped
 
 volumes:

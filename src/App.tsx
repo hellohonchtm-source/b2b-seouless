@@ -6,44 +6,74 @@ import { Orders } from './components/Orders';
 import { AgentsHub } from './components/AgentsHub';
 import { Analytics } from './components/Analytics';
 import { MakerApiModal } from './components/MakerApiModal';
-import { mockUserProfiles, mockProducts, mockOrders, mockAgentTasks } from './data/mockData';
-import { UserProfile, ProductCatalogItem, Order, AgentTask } from '../types';
+import { useAppData } from './hooks/useAppData';
+import { ProductCatalogItem, Order } from '../types';
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState<UserProfile>(mockUserProfiles[0]);
+  const {
+    loading,
+    error,
+    source,
+    authenticated,
+    currentUser,
+    allUsers,
+    products,
+    orders,
+    agentTasks,
+    setCurrentUser,
+    addProduct,
+    createNewOrder,
+    addAgentTask,
+  } = useAppData();
+
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-
-  const [products, setProducts] = useState<ProductCatalogItem[]>(mockProducts);
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
-  const [agentTasks, setAgentTasks] = useState<AgentTask[]>(mockAgentTasks);
-
   const [selectedProductForOrder, setSelectedProductForOrder] = useState<ProductCatalogItem | null>(null);
   const [makerApiOpen, setMakerApiOpen] = useState(false);
-
-  const handleAddNewProduct = (newProd: ProductCatalogItem) => {
-    setProducts([newProd, ...products]);
-  };
-
-  const handleCreateOrder = (newOrder: Order) => {
-    setOrders([newOrder, ...orders]);
-  };
-
-  const handleAddTask = (newTask: AgentTask) => {
-    setAgentTasks([newTask, ...agentTasks]);
-  };
 
   return (
     <div className="min-h-screen bg-[#171717] text-white flex flex-col">
       <Header
         currentUser={currentUser}
         onSwitchUser={setCurrentUser}
-        allUsers={mockUserProfiles}
+        allUsers={allUsers}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenMakerApi={() => setMakerApiOpen(true)}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        {/* Data source / error banner */}
+        {(loading || error) && (
+          <div className={`mb-4 px-4 py-3 rounded-2xl border text-xs font-semibold flex items-center gap-2 ${
+            error
+              ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+              : 'bg-[#38bdf8]/10 border-[#38bdf8]/30 text-[#38bdf8]'
+          }`}>
+            {loading ? (
+              <>
+                <span className="w-2 h-2 rounded-full bg-[#38bdf8] animate-ping" />
+                <span>Connecting to Supabase…</span>
+              </>
+            ) : (
+              <>
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <span>Some remote data unavailable — showing demo data. {error}</span>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Data source indicator */}
+        {!loading && !error && (
+          <div className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#A3A3A3]">
+            <span className={`w-2 h-2 rounded-full ${authenticated ? 'bg-emerald-400' : 'bg-[#A3A3A3]'}`} />
+            <span>
+              Data source: {source === 'supabase' ? 'Supabase (live)' : 'Local demo data'}
+              {!authenticated && ' — sign in to connect'}
+            </span>
+          </div>
+        )}
+
         {activeTab === 'dashboard' && (
           <Dashboard
             currentUser={currentUser}
@@ -63,7 +93,7 @@ export default function App() {
               setSelectedProductForOrder(prod);
               setActiveTab('orders');
             }}
-            onAddNewProduct={handleAddNewProduct}
+            onAddNewProduct={addProduct}
           />
         )}
 
@@ -72,7 +102,7 @@ export default function App() {
             orders={orders}
             products={products}
             currentUser={currentUser}
-            onCreateOrder={handleCreateOrder}
+            onCreateOrder={createNewOrder}
             selectedProductForOrder={selectedProductForOrder}
             onCloseOrderModal={() => setSelectedProductForOrder(null)}
           />
@@ -81,7 +111,7 @@ export default function App() {
         {activeTab === 'agents' && (
           <AgentsHub
             tasks={agentTasks}
-            onAddTask={handleAddTask}
+            onAddTask={addAgentTask}
           />
         )}
 
