@@ -5,6 +5,7 @@ import { Catalog } from './components/Catalog';
 import { Orders } from './components/Orders';
 import { AgentsHub } from './components/AgentsHub';
 import { Analytics } from './components/Analytics';
+import { MakerApiModal } from './components/MakerApiModal';
 import { mockUserProfiles, mockProducts, mockOrders, mockAgentTasks } from './data/mockData';
 import { UserProfile, ProductCatalogItem, Order, AgentTask } from '../types';
 
@@ -17,6 +18,7 @@ export default function App() {
   const [agentTasks, setAgentTasks] = useState<AgentTask[]>(mockAgentTasks);
 
   const [selectedProductForOrder, setSelectedProductForOrder] = useState<ProductCatalogItem | null>(null);
+  const [makerApiOpen, setMakerApiOpen] = useState(false);
 
   const handleAddNewProduct = (newProd: ProductCatalogItem) => {
     setProducts([newProd, ...products]);
@@ -38,6 +40,7 @@ export default function App() {
         allUsers={mockUserProfiles}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onOpenMakerApi={() => setMakerApiOpen(true)}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8">
@@ -48,6 +51,7 @@ export default function App() {
             orders={orders}
             agentTasks={agentTasks}
             onNavigate={setActiveTab}
+            onOpenMakerApi={() => setMakerApiOpen(true)}
           />
         )}
 
@@ -88,6 +92,8 @@ export default function App() {
           />
         )}
       </main>
+
+      <MakerApiModal open={makerApiOpen} onClose={() => setMakerApiOpen(false)} />
     </div>
   );
 }

@@ -10,7 +10,8 @@ import {
   Zap, 
   DollarSign,
   PackageCheck,
-  RefreshCw
+  RefreshCw,
+  Terminal
 } from 'lucide-react';
 import { ProductCatalogItem, Order, UserProfile, AgentTask } from '../../types';
 
@@ -20,6 +21,7 @@ interface DashboardProps {
   orders: Order[];
   agentTasks: AgentTask[];
   onNavigate: (tab: string) => void;
+  onOpenMakerApi: () => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -27,7 +29,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   products,
   orders,
   agentTasks,
-  onNavigate
+  onNavigate,
+  onOpenMakerApi
 }) => {
   const totalRevenue = orders.reduce((acc, o) => acc + o.totalAmountUSD, 0);
   const totalActiveSKUs = products.reduce((acc, p) => acc + p.variants.reduce((vAcc, v) => vAcc + v.inventoryCount, 0), 0);
@@ -118,6 +121,34 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Premium Maker API Section */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#9E7FFF]/10 via-[#262626] to-[#1c1c1c] border border-[#9E7FFF]/20 p-6 md:p-8 shadow-xl">
+        <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-bl from-[#9E7FFF]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-start gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#9E7FFF]/20 to-[#38bdf8]/20 border border-[#9E7FFF]/30 flex items-center justify-center flex-shrink-0">
+              <Terminal className="w-7 h-7 text-[#9E7FFF]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-lg font-extrabold text-white">Maker API</h2>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#9E7FFF]/15 text-[#9E7FFF] border border-[#9E7FFF]/30 uppercase">Premium</span>
+              </div>
+              <p className="text-sm text-[#A3A3A3] max-w-md leading-relaxed">
+                Integrate your commerce stack with NexusAI. Sync catalog, create orders, and launch AI workflows via REST API with curl-ready examples.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onOpenMakerApi}
+            className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#9E7FFF] to-[#805ad5] text-white font-bold text-sm shadow-lg shadow-[#9E7FFF]/30 hover:shadow-[#9E7FFF]/50 hover:scale-[1.02] transition-all whitespace-nowrap"
+          >
+            <Terminal className="w-4 h-4" />
+            <span>View API Docs</span>
+          </button>
+        </div>
       </div>
 
       {/* Two Column Layout: Recent Orders & Agent Activity */}

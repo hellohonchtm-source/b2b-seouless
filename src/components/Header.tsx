@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Bell, Shield, User, Globe, ChevronDown, Cpu } from 'lucide-react';
+import { Sparkles, Bell, Shield, User, Globe, ChevronDown, Cpu, Terminal } from 'lucide-react';
 import { UserProfile } from '../../types';
 
 interface HeaderProps {
@@ -8,6 +8,7 @@ interface HeaderProps {
   allUsers: UserProfile[];
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  onOpenMakerApi: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,7 +16,8 @@ export const Header: React.FC<HeaderProps> = ({
   onSwitchUser,
   allUsers,
   activeTab,
-  setActiveTab
+  setActiveTab,
+  onOpenMakerApi
 }) => {
   const [showUserMenu, setShowUserMenu] = React.useState(false);
 
@@ -69,8 +71,17 @@ export const Header: React.FC<HeaderProps> = ({
           </nav>
         </div>
 
-        {/* Right Controls: Notifications & User Switcher */}
+        {/* Right Controls: Maker API, Notifications & User Switcher */}
         <div className="flex items-center gap-4">
+          <button
+            onClick={onOpenMakerApi}
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-[#9E7FFF]/15 to-[#38bdf8]/15 border border-[#9E7FFF]/30 text-[#9E7FFF] text-sm font-bold hover:from-[#9E7FFF]/25 hover:to-[#38bdf8]/25 hover:border-[#9E7FFF]/50 transition-all"
+          >
+            <Terminal className="w-4 h-4" />
+            <span className="hidden sm:inline">Maker API</span>
+            <span className="sm:hidden">API</span>
+          </button>
+
           <button className="relative p-2.5 rounded-xl bg-[#262626] border border-[#2F2F2F] text-[#A3A3A3] hover:text-white hover:border-[#9E7FFF]/50 transition-all">
             <Bell className="w-5 h-5" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#38bdf8] animate-ping" />
